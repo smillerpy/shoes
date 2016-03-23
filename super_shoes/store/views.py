@@ -2,6 +2,7 @@ from models import Store
 from rest_framework import viewsets
 from .serializers import StoreSerializer
 from rest_framework.response import Response
+from rest_framework import exceptions
 
 
 class StoreViewSet(viewsets.ModelViewSet):
@@ -12,9 +13,10 @@ class StoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        r = super(StoreViewSet, self).retrieve(request, args, kwargs)
-        print "retrieve", r, args, kwargs
-        return r
+        pk = kwargs["pk"]
+        queryset = Store.objects.get(pk=pk)
+        serializer = StoreSerializer(queryset)
+        return Response({"store": serializer.data, "success": True})
 
     def list(self, request, *args, **kwargs):
         queryset = Store.objects.all()
@@ -24,3 +26,20 @@ class StoreViewSet(viewsets.ModelViewSet):
                          "success": True,
                          "stores": serializer.data})
 
+    def handle_exception(self, exc):
+        """
+        Handle any exception that occurs, by returning an appropriate response,
+        or re-raising the error.
+        """
+        print "lalalalalala"
+        if isinstance(exc, (exceptions.NotAuthenticated,
+                            exceptions.PermissionDenied,
+                            exceptions.AuthenticationFailed)):
+            response = Response({"success": False, "error_code": 401,
+                                 "error_msg": "Not authorized"})
+        else:
+            response = Response({"success": False, "error_code": 500,
+                                 "error_msg": "Server Error"})
+
+        response.exception = True
+        return response

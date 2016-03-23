@@ -8,3 +8,7 @@ class Article(models.Model):
     total_in_shelf = models.IntegerField()
     total_in_vault = models.IntegerField()
     store = models.ForeignKey("store.Store")
+
+    @property
+    def store_name(self):
+        return self.store.name
