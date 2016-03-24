@@ -3,6 +3,22 @@ from store.models import Store
 from rest_framework import viewsets
 from .serializers import ArticleSerializer
 from rest_framework.response import Response
+from article.forms import ArticleModelForm
+from django.shortcuts import render
+from django.template import RequestContext
+
+
+def new_article_view(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ArticleModelForm(data=request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            return render(request, "success.html")
+    else:
+        form = ArticleModelForm()
+    return render(request, "new_article.html", {"form": form},
+                  context_instance=RequestContext(request))
 
 
 class ArticlebyStoreViewSet(viewsets.ModelViewSet):

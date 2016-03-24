@@ -4,6 +4,23 @@ from .serializers import StoreSerializer
 from rest_framework.response import Response
 from rest_framework import exceptions
 
+from store.forms import StoreModelForm
+from django.shortcuts import render
+from django.template import RequestContext
+
+
+def new_store_view(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = StoreModelForm(data=request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            return render(request, "success.html")
+    else:
+        form = StoreModelForm()
+    return render(request, "new_store.html", {"form": form},
+                  context_instance=RequestContext(request))
+
 
 class StoreViewSet(viewsets.ModelViewSet):
     """

@@ -53,7 +53,6 @@ DATABASES = {
 }
 ########## END DATABASE CONFIGURATION
 
-
 ########## GENERAL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = 'America/Los_Angeles'
@@ -246,9 +245,21 @@ INSTALLED_APPS += (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10
 }
 ########## END REST CONFIGURATION
+# #### CRISPY CONFIGURATION
+INSTALLED_APPS += (
+    'crispy_forms',
+)
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+CRISPY_FAIL_SILENTLY = not DEBUG
+
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'

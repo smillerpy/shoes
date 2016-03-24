@@ -9,5 +9,6 @@ router.register(r'stores', views.StoreViewSet)
 # Additionally, we include login URLs for the
 # browsable API.
 urlpatterns = [
+    url("^new_store$", views.new_store_view, name='new_store'),
     url(r'^', include(router.urls)),
 ]
