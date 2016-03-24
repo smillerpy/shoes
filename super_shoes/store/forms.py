@@ -20,6 +20,8 @@ class StoreModelForm(forms.ModelForm):
 
     def clean(self):
         super(StoreModelForm, self).clean()
+        if len(self.cleaned_data) != 2:
+            raise forms.ValidationError(_("Correct the form below"))
         try:
             store = Store(**self.cleaned_data)
             store.save()
